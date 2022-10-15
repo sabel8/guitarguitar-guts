@@ -6,8 +6,11 @@ import { ROUTES } from "./constants/routes";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme, CssBaseline, Box } from "@mui/material";
 import { Header } from "./components/Header";
+import { GuitarListStore } from "./modules/GuitarList/GuitarListStore";
 
-interface IStores {}
+interface IStores {
+  GuitarListStore: GuitarListStore;
+}
 
 class App extends React.Component {
   private stores: IStores;
@@ -15,7 +18,11 @@ class App extends React.Component {
   constructor(props: any) {
     super(props);
 
-    this.stores = {};
+    this.stores = {
+      GuitarListStore: new GuitarListStore(),
+    };
+
+    this.stores.GuitarListStore.loadGuitars();
   }
 
   render() {
@@ -26,7 +33,7 @@ class App extends React.Component {
           theme={createTheme({
             palette: {
               primary: { main: "#ec661a" },
-              background: { default: "#16232d" },
+              // background: { default: "#16232d" },
             },
           })}
         >

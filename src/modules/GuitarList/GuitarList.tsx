@@ -14,6 +14,7 @@ import {
   InputLabel,
   Badge,
   Alert,
+  Chip,
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
@@ -89,15 +90,25 @@ export class GuitarList extends React.Component<IProps> {
                 </Select>
               </FormControl>
             </Box>
-            {Object.values(this.listStore.filters).filter((v) => !!v).length >
-              0 && (
-              <Typography>
-                Applied filters:{" "}
-                {Object.entries(this.listStore.filters)
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(", ")}
-              </Typography>
-            )}
+            <Box sx={{ mb: 2 }}>
+              {Object.values(this.listStore.filters).filter((v) => !!v).length >
+                0 && (
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                  <Typography>Applied filters</Typography>
+                  {this.listStore.filtersApplied.map(
+                    ({ key, title, value }) => (
+                      <Chip
+                        label={`${title}: ${value}`}
+                        variant="outlined"
+                        onDelete={() =>
+                          this.listStore.setFilter(key as any, null)
+                        }
+                      />
+                    )
+                  )}
+                </Box>
+              )}
+            </Box>
             {this.listStore.filteredGuitars?.length > 0 ? (
               <>
                 <Grid container spacing={2}>

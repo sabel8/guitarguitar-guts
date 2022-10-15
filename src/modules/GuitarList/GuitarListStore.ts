@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { categories } from "../../constants/categories";
 import { BodyShape, IGuitar } from "../../models/IGuitar";
 
 const GUITAR_PER_PAGE = 9;
@@ -57,12 +58,29 @@ export class GuitarListStore {
     this.page = page;
   }
 
-  setFilter(key: keyof IFilters, value: string | number) {
-    console.log(
-      "🚀 ~ file: GuitarListStore.ts ~ line 55 ~ GuitarListStore ~ setFilter ~ key",
-      key
-    );
+  setFilter(key: keyof IFilters, value: string | number | null = null) {
     (this.filters[key] as any) = value;
     this.setPage(1);
+  }
+
+  get filtersApplied(): Array<{
+    key: string;
+    title: string;
+    value: string;
+  }> {
+    return [
+      {
+        key: "category",
+        title: "Category",
+        value: this.filters.category
+          ? categories[this.filters.category]?.Title ?? this.filters.category
+          : "",
+      },
+      {
+        key: "bodyShape",
+        title: "Body shape",
+        value: this.filters.bodyShape ? BodyShape[this.filters.bodyShape] : "",
+      },
+    ].filter((f) => f.value !== "");
   }
 }

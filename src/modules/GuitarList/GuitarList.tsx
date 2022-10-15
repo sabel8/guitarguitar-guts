@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
+import { Link } from "react-router-dom";
 import { categories } from "../../constants/categories";
 import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
 import { GuitarListStore } from "./GuitarListStore";
@@ -185,24 +186,26 @@ class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
   render() {
     const { guitar } = this.props;
     const card = (
-      <Card sx={{ display: "flex", height: 200, width: "100%" }}>
-        <CardMedia
-          component="img"
-          height={200}
-          image={guitar.pictureMain}
-          alt={guitar.itemName}
-          sx={{ height: 200, width: 100, objectFit: "contain" }}
-          style={{ padding: 10 }}
-        />
-        <Box>
-          <CardContent>
-            <Typography variant="h6">{guitar.itemName}</Typography>
-            <Typography variant="h5" color="text.secondary">
-              £{guitar.salesPrice}
-            </Typography>
-          </CardContent>
-        </Box>
-      </Card>
+      <Link to={`/guitars/${guitar.skU_ID}`} style={{ width: "100%" }}>
+        <Card sx={{ display: "flex", height: 200, width: "100%" }}>
+          <CardMedia
+            component="img"
+            height={200}
+            image={guitar.pictureMain}
+            alt={guitar.itemName}
+            sx={{ height: 200, width: 100, objectFit: "contain" }}
+            style={{ padding: 10 }}
+          />
+          <Box>
+            <CardContent>
+              <Typography variant="h6">{guitar.itemName}</Typography>
+              <Typography variant="h5" color="text.secondary">
+                £{guitar.salesPrice}
+              </Typography>
+            </CardContent>
+          </Box>
+        </Card>
+      </Link>
     );
 
     const needsBadge: boolean = guitar.salesPrice < 500;

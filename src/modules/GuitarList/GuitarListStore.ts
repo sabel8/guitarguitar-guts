@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { guitars } from "../../constants/apiResponse";
 import { BodyShape, IGuitar } from "../../models/IGuitar";
 
 const GUITAR_PER_PAGE = 9;
@@ -21,10 +20,13 @@ export class GuitarListStore {
 
   *loadGuitars() {
     this.loading = true;
-    // const guitars = (yield axios.get(
+    // this.guitars = ((yield axios.get(
     //   "https://services.guitarguitar.co.uk/WebService/api/hackathon/guitars"
-    // )) as { data: IGuitar[] };
-    // this.guitars = guitars.data;
+    // )) as { data: IGuitar[] }).data;
+    var request = new XMLHttpRequest();
+    request.open("GET", "/assets/guitars.json", false);
+    request.send(null);
+    let guitars = JSON.parse(request.responseText);
     this.guitars = yield guitars;
     this.loading = false;
   }

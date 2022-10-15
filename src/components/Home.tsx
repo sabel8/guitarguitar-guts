@@ -117,6 +117,7 @@ function ButtonBases(props: { GuitarListStore: GuitarListStore }) {
                   p: 4,
                   pt: 2,
                   pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                  fontSize: "20pt",
                 }}
               >
                 {image.title.toUpperCase()}

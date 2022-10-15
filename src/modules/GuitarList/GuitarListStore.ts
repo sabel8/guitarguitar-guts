@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { categories } from "../../constants/categories";
 import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
+import { IGuitarWithSong } from "../../models/IGuitarWithSong";
 
 const GUITAR_PER_PAGE = 9;
 
@@ -13,6 +14,7 @@ interface IFilters {
 
 export class GuitarListStore {
   guitars: IGuitar[] = [];
+  guitarsWithSongs: IGuitarWithSong[] = [];
   loading: boolean = true;
   page: number = 1;
   filters: Partial<IFilters> = {};
@@ -30,8 +32,12 @@ export class GuitarListStore {
     request.open("GET", "/assets/guitars.json", false);
     request.send(null);
     let guitars = JSON.parse(request.responseText);
-    console.log("🚀 ~ file: GuitarListStore.ts ~ line 33 ~ GuitarListStore ~ *loadGuitars ~ guitars", guitars)
-    
+
+    request = new XMLHttpRequest();
+    request.open("GET", "/assets/guitarswithsongs.json", false);
+    request.send(null);
+    this.guitarsWithSongs = JSON.parse(request.responseText);
+
     this.guitars = yield guitars;
     this.loading = false;
   }

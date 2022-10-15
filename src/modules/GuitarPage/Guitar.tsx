@@ -11,6 +11,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { GuitarPageStore } from "./GuitarPageStore";
 import { ArrowBack } from "@mui/icons-material";
+import YouTube from "react-youtube";
+
 interface IProps {
   GuitarPageStore?: GuitarPageStore;
 }
@@ -25,11 +27,6 @@ export class Guitar extends React.Component<IProps> {
   }
 
   render() {
-    console.log(
-      "🚀 ~ file: GuitarPage.tsx ~ line 9 ~ GuitarPage ~ render ~ this.props",
-      this.props
-    );
-
     return (
       <Container sx={{ mt: 2 }}>
         {this.store.loading ? (
@@ -74,6 +71,11 @@ export class Guitar extends React.Component<IProps> {
                 </Box>
               </Grid>
             </Grid>
+            <Box sx={{ display: "flex", justifyContent: "center", m: 4 }}>
+              {this.store.youtubeId && (
+                <YouTube videoId={this.store.youtubeId as string} />
+              )}
+            </Box>
           </>
         )}
       </Container>

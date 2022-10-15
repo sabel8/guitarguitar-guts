@@ -157,7 +157,14 @@ export class GuitarList extends React.Component<IProps> {
                 <Grid container spacing={2}>
                   {this.listStore.pageOfGuitarsFiltered.map((guitar, i) => (
                     <Grid item xs={4} key={i}>
-                      <GuitarListItem guitar={guitar} />
+                      <GuitarListItem
+                        guitar={guitar}
+                        needsBadge={
+                          !!this.listStore.guitarsWithSongs.find(
+                            (gws) => gws.skU_ID === guitar.skU_ID
+                          )
+                        }
+                      />
                     </Grid>
                   ))}
                 </Grid>
@@ -182,9 +189,12 @@ export class GuitarList extends React.Component<IProps> {
   }
 }
 
-class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
+class GuitarListItem extends React.Component<{
+  guitar: IGuitar;
+  needsBadge: boolean;
+}> {
   render() {
-    const { guitar } = this.props;
+    const { guitar, needsBadge } = this.props;
     const card = (
       <Link to={`/guitars/${guitar.skU_ID}`} style={{ width: "100%" }}>
         <Card sx={{ display: "flex", height: 200, width: "100%" }}>
@@ -208,14 +218,14 @@ class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
       </Link>
     );
 
-    const needsBadge: boolean = guitar.salesPrice < 500;
-
-    return needsBadge ? (
-      <Badge color="primary" badgeContent="Cheap!" sx={{ display: "flex" }}>
+    return (
+      <Badge
+        color="error"
+        badgeContent={needsBadge ? "YT" : null}
+        sx={{ width: "100%" }}
+      >
         {card}
       </Badge>
-    ) : (
-      card
     );
   }
 }

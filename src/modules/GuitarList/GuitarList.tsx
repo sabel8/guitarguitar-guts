@@ -13,7 +13,7 @@ import {
   FormControl,
   InputLabel,
   Badge,
-  Alert
+  Alert,
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
@@ -45,7 +45,7 @@ export class GuitarList extends React.Component<IProps> {
               <FormControl sx={{ width: 150 }}>
                 <InputLabel>Category</InputLabel>
                 <Select
-                  value={this.listStore.filters.category}
+                  value={this.listStore.filters?.category ?? ""}
                   label="Category"
                   onChange={(e) =>
                     this.listStore.setFilter(
@@ -55,11 +55,13 @@ export class GuitarList extends React.Component<IProps> {
                   }
                 >
                   {[
-                    { text: "Electric", value: "GUEG" },
                     { text: "Acoustic", value: "GUAG" },
+                    { text: "Electric", value: "GUEG" },
                     { text: "Bass", value: "GUBG" },
-                  ].map((item) => (
-                    <MenuItem value={item.value}>{item.text}</MenuItem>
+                  ].map((item, i) => (
+                    <MenuItem value={item.value} key={i}>
+                      {item.text}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -67,8 +69,8 @@ export class GuitarList extends React.Component<IProps> {
             {this.listStore.filteredGuitars?.length > 0 ? (
               <>
                 <Grid container spacing={2}>
-                  {this.listStore.pageOfGuitarsFiltered.map((guitar) => (
-                    <Grid item xs={4}>
+                  {this.listStore.pageOfGuitarsFiltered.map((guitar, i) => (
+                    <Grid item xs={4} key={i}>
                       <GuitarListItem guitar={guitar} />
                     </Grid>
                   ))}

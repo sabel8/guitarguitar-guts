@@ -52,6 +52,10 @@ export class GuitarListStore {
   }
 
   setFilter(key: keyof IFilters, value: string) {
+    console.log(
+      "🚀 ~ file: GuitarListStore.ts ~ line 55 ~ GuitarListStore ~ setFilter ~ key",
+      key
+    );
     this.filters[key] = value;
     this.setPage(1);
   }

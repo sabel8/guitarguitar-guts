@@ -1,27 +1,18 @@
-import Container from "@mui/material/Container";
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { ThemeProvider } from "@emotion/react";
-import {
-  Box,
-  Button,
-  ButtonBase,
-  createTheme,
-  CssBaseline,
-  Grid,
-  Stack,
-  styled,
-  Typography,
-} from "@mui/material";
-import { Header } from "./Header";
-import { Link } from "@mui/icons-material";
+import { Box, ButtonBase, styled, Typography } from "@mui/material";
+import { GuitarListStore } from "../modules/GuitarList/GuitarListStore";
+import { Link } from "react-router-dom";
 
-interface IProps {}
+interface IProps {
+  GuitarListStore?: GuitarListStore;
+}
 
+@inject("GuitarListStore")
 @observer
 export class Home extends React.Component<IProps> {
   render() {
-    return <ButtonBases />;
+    return <ButtonBases GuitarListStore={this.props.GuitarListStore!} />;
   }
 }
 
@@ -89,11 +80,11 @@ const ImageMarked = styled("span")(({ theme }) => ({
   transition: theme.transitions.create("opacity"),
 }));
 
-export default function ButtonBases() {
+function ButtonBases(props: { GuitarListStore: GuitarListStore }) {
   const images = [
-    { url: "/assets/acoustic.png", title: "acoustic" },
-    { url: "/assets/electric.png", title: "electric" },
-    { url: "/assets/bass.png", title: "bass" },
+    { url: "/assets/acoustic.png", title: "acoustic", category: "GUAG" },
+    { url: "/assets/electric.png", title: "electric", category: "GUEG" },
+    { url: "/assets/bass.png", title: "bass", category: "GUBG" },
   ];
   return (
     <Box
@@ -105,9 +96,15 @@ export default function ButtonBases() {
         height: "100%",
       }}
     >
-      {images.map((image) => (
+      {images.map((image, i) => (
         <ImageButton focusRipple key={image.title} style={{ flex: 1 }}>
-          <a href={`/${image.title}`}>
+          <Link
+            to={`/${image.title}`}
+            key={i}
+            onClick={() =>
+              props.GuitarListStore.setFilter("category", image.category)
+            }
+          >
             <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
             <ImageBackdrop className="MuiImageBackdrop-root" />
             <Image>
@@ -126,7 +123,7 @@ export default function ButtonBases() {
                 <ImageMarked className="MuiImageMarked-root" />
               </Typography>
             </Image>
-          </a>
+          </Link>
         </ImageButton>
       ))}
     </Box>

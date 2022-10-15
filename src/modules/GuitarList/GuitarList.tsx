@@ -1,18 +1,20 @@
-import { ExpandMore } from "@mui/icons-material";
 import {
   CircularProgress,
   Container,
   Card,
-  CardHeader,
-  Avatar,
-  CardActions,
   CardContent,
   CardMedia,
   Box,
   Grid,
   Typography,
+  Pagination,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Badge,
+  Alert
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { inject, observer } from "mobx-react";
 import React from "react";
 import { IGuitar } from "../../models/IGuitar";
@@ -25,19 +27,67 @@ interface IProps {
 @inject("GuitarListStore")
 @observer
 export class GuitarList extends React.Component<IProps> {
+  private listStore: GuitarListStore;
+
+  constructor(props: IProps) {
+    super(props);
+    this.listStore = this.props.GuitarListStore!;
+  }
+
   render() {
     return (
       <Container>
-        {this.props.GuitarListStore?.loading ? (
+        {this.listStore.loading ? (
           <CircularProgress />
         ) : (
-          <Grid container spacing={2}>
-            {this.props.GuitarListStore?.guitars.map((guitar) => (
-              <Grid item xs={4}>
-                <GuitarListItem guitar={guitar} />
-              </Grid>
-            ))}
-          </Grid>
+          <>
+            <Box sx={{ display: "flex", justifyContent: "center", padding: 3 }}>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Category</InputLabel>
+                <Select
+                  value={this.listStore.filters.category}
+                  label="Category"
+                  onChange={(e) =>
+                    this.listStore.setFilter(
+                      "category",
+                      e.target.value as string
+                    )
+                  }
+                >
+                  {[
+                    { text: "Electric", value: "GUEG" },
+                    { text: "Acoustic", value: "GUAG" },
+                    { text: "Bass", value: "GUBG" },
+                  ].map((item) => (
+                    <MenuItem value={item.value}>{item.text}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            {this.listStore.filteredGuitars?.length > 0 ? (
+              <>
+                <Grid container spacing={2}>
+                  {this.listStore.pageOfGuitarsFiltered.map((guitar) => (
+                    <Grid item xs={4}>
+                      <GuitarListItem guitar={guitar} />
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box
+                  sx={{ display: "flex", justifyContent: "center", padding: 3 }}
+                >
+                  <Pagination
+                    count={this.listStore.pageCountFiltered}
+                    color="primary"
+                    page={this.listStore.page}
+                    onChange={(_e, p) => this.listStore.setPage(p)}
+                  />
+                </Box>
+              </>
+            ) : (
+              <Alert severity="error">No guitars matches the criteria!</Alert>
+            )}
+          </>
         )}
       </Container>
     );
@@ -47,8 +97,8 @@ export class GuitarList extends React.Component<IProps> {
 class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
   render() {
     const { guitar } = this.props;
-    return (
-      <Card sx={{ display: "flex", height: 200 }}>
+    const card = (
+      <Card sx={{ display: "flex", height: 200, width: "100%" }}>
         <CardMedia
           component="img"
           height={200}
@@ -66,6 +116,16 @@ class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
           </CardContent>
         </Box>
       </Card>
+    );
+
+    const needsBadge: boolean = guitar.salesPrice < 500;
+
+    return needsBadge ? (
+      <Badge color="primary" badgeContent="Cheap!" sx={{ display: "flex" }}>
+        {card}
+      </Badge>
+    ) : (
+      card
     );
   }
 }

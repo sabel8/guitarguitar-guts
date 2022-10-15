@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "GUTS Guitar Guitar",
+    "version": "0.1",
+    "description": "Extension created for GUTS 2022 Hackathon",
+    "permissions": ["storage", "tabs"],
+    "action": {
+        "default_title": "GuitarGuitar Guitar Finder",
+        "default_popup": "popup.html"
+      },
+    "icons":{
+        "16":"./assests/shortenedlogo.png",
+        "48":"./assests/shortenedlogo.png",
+        "128":"./assests/shortenedlogo.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": ["script.js"]
+        }
+    ]
+
+}

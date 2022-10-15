@@ -1,11 +1,8 @@
 import React from "react";
+import { GuitarList } from "../modules/GuitarList/GuitarList";
 
 export class ElectricPage extends React.Component {
-  render() {
-	return (
-	  <div>
-		<h1>Electric Page</h1>
-	  </div>
-	);
-  }
+	render() {
+		return <GuitarList />;
+	  }
 }

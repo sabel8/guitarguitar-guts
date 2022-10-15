@@ -99,7 +99,7 @@ function ButtonBases(props: { GuitarListStore: GuitarListStore }) {
       {images.map((image, i) => (
         <ImageButton focusRipple key={image.title} style={{ flex: 1 }}>
           <Link
-            to={`/${image.title}`}
+            to={`/guitars`}
             key={i}
             onClick={() =>
               props.GuitarListStore.setFilter("category", image.category)

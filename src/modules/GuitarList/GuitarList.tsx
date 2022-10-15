@@ -41,7 +41,14 @@ export class GuitarList extends React.Component<IProps> {
           <CircularProgress />
         ) : (
           <>
-            <Box sx={{ display: "flex", justifyContent: "center", padding: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: 3,
+                gap: 1,
+              }}
+            >
               <FormControl sx={{ width: 150 }}>
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -71,29 +78,26 @@ export class GuitarList extends React.Component<IProps> {
                   value={this.listStore.filters?.bodyShape ?? ""}
                   label="Body shape"
                   onChange={(e) =>
-                    this.listStore.setFilter(
-                      "bodyShape",
-                      +e.target.value
-                    )
+                    this.listStore.setFilter("bodyShape", +e.target.value)
                   }
                 >
-                  {(Object.entries(BodyShape)).map(([key, value], i) => (
+                  {Object.entries(BodyShape).map(([key, value], i) => (
                     <MenuItem value={key} key={i}>
                       {value}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              {Object.values(this.listStore.filters).filter((v) => !!v).length >
-                0 && (
-                <Typography>
-                  Applied filters:{" "}
-                  {Object.entries(this.listStore.filters)
-                    .map(([key, value]) => `${key}: ${value}`)
-                    .join(", ")}
-                </Typography>
-              )}
             </Box>
+            {Object.values(this.listStore.filters).filter((v) => !!v).length >
+              0 && (
+              <Typography>
+                Applied filters:{" "}
+                {Object.entries(this.listStore.filters)
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join(", ")}
+              </Typography>
+            )}
             {this.listStore.filteredGuitars?.length > 0 ? (
               <>
                 <Grid container spacing={2}>

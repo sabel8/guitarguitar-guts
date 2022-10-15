@@ -1,12 +1,14 @@
 import { makeAutoObservable } from "mobx";
 import { categories } from "../../constants/categories";
-import { BodyShape, IGuitar } from "../../models/IGuitar";
+import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
 
 const GUITAR_PER_PAGE = 9;
 
 interface IFilters {
   category: string;
   bodyShape: number;
+  pickup: number;
+  colour: number;
 }
 
 export class GuitarListStore {
@@ -28,6 +30,8 @@ export class GuitarListStore {
     request.open("GET", "/assets/guitars.json", false);
     request.send(null);
     let guitars = JSON.parse(request.responseText);
+    console.log("🚀 ~ file: GuitarListStore.ts ~ line 33 ~ GuitarListStore ~ *loadGuitars ~ guitars", guitars)
+    
     this.guitars = yield guitars;
     this.loading = false;
   }
@@ -45,7 +49,11 @@ export class GuitarListStore {
         (this.filters.category
           ? g.category.includes(this.filters.category)
           : true) &&
-        (this.filters.bodyShape ? g.bodyShape === this.filters.bodyShape : true)
+        (this.filters.bodyShape
+          ? g.bodyShape === this.filters.bodyShape
+          : true) &&
+        (this.filters.pickup ? g.pickup === this.filters.pickup : true) &&
+        (this.filters.colour ? g.colour === this.filters.colour : true)
       );
     });
   }
@@ -80,6 +88,16 @@ export class GuitarListStore {
         key: "bodyShape",
         title: "Body shape",
         value: this.filters.bodyShape ? BodyShape[this.filters.bodyShape] : "",
+      },
+      {
+        key: "pickup",
+        title: "Pickup",
+        value: this.filters.pickup ? Pickup[this.filters.pickup] : "",
+      },
+      {
+        key: "colour",
+        title: "Colour",
+        value: this.filters.colour ? Colour[this.filters.colour] : "",
       },
     ].filter((f) => f.value !== "");
   }

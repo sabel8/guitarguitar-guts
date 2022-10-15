@@ -1,3 +1,4 @@
+import { Circle } from "@mui/icons-material";
 import {
   CircularProgress,
   Container,
@@ -18,7 +19,8 @@ import {
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
-import { BodyShape, IGuitar } from "../../models/IGuitar";
+import { categories } from "../../constants/categories";
+import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
 import { GuitarListStore } from "./GuitarListStore";
 
 interface IProps {
@@ -62,13 +64,9 @@ export class GuitarList extends React.Component<IProps> {
                     )
                   }
                 >
-                  {[
-                    { text: "Acoustic", value: "GUAG" },
-                    { text: "Electric", value: "GUEG" },
-                    { text: "Bass", value: "GUBG" },
-                  ].map((item, i) => (
-                    <MenuItem value={item.value} key={i}>
-                      {item.text}
+                  {Object.entries(categories).map(([key, value], i) => (
+                    <MenuItem value={key} key={i}>
+                      {value.Category}
                     </MenuItem>
                   ))}
                 </Select>
@@ -82,11 +80,54 @@ export class GuitarList extends React.Component<IProps> {
                     this.listStore.setFilter("bodyShape", +e.target.value)
                   }
                 >
-                  {Object.entries(BodyShape).map(([key, value], i) => (
-                    <MenuItem value={key} key={i}>
-                      {value}
-                    </MenuItem>
-                  ))}
+                  {Object.entries(BodyShape)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Pickup</InputLabel>
+                <Select
+                  value={this.listStore.filters?.pickup ?? ""}
+                  label="Pickup"
+                  onChange={(e) =>
+                    this.listStore.setFilter("pickup", +e.target.value)
+                  }
+                >
+                  {Object.entries(Pickup)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Colour</InputLabel>
+                <Select
+                  value={this.listStore.filters?.colour ?? ""}
+                  label="Colour"
+                  onChange={(e) =>
+                    this.listStore.setFilter("colour", +e.target.value)
+                  }
+                >
+                  {Object.entries(Colour)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        <Box
+                          sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                        >
+                          <Circle htmlColor={value.toString().toLowerCase()} />{" "}
+                          {value}
+                        </Box>
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Box>
@@ -96,8 +137,9 @@ export class GuitarList extends React.Component<IProps> {
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                   <Typography>Applied filters</Typography>
                   {this.listStore.filtersApplied.map(
-                    ({ key, title, value }) => (
+                    ({ key, title, value }, i) => (
                       <Chip
+                        key={i}
                         label={`${title}: ${value}`}
                         variant="outlined"
                         onDelete={() =>

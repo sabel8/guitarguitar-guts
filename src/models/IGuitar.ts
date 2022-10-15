@@ -43,3 +43,35 @@ export enum BodyShape {
   Head = 15,
   Cabinet = 16,
 }
+
+export enum Pickup {
+  ElectroAcoustic = 1,
+  SS = 2,
+  SSS = 3,
+  HH = 4,
+  HHH = 5,
+  HS = 6,
+  HSS = 7,
+  HSH = 8,
+  P90 = 9,
+  S = 10,
+  H = 11,
+}
+
+export enum Colour {
+  Red = 3,
+  Orange = 12,
+  Yellow = 4,
+  Green = 6,
+  Blue = 5,
+  Purple = 13,
+  Pink = 8,
+  Brown = 7,
+  Gold = 9,
+  Silver = 10,
+  Grey = 11,
+  Black = 1,
+  White = 2,
+  Natural = 14,
+  Multicolour = 15,
+}

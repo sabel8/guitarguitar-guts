@@ -4,7 +4,9 @@ found in the LICENSE file. -->
 <!DOCTYPE html>
 <html>
   <head>
+
     <title>We have found a guiter played by X for you</title>
+ 
     <style>
       body {
         text-align: center;
@@ -27,15 +29,22 @@ found in the LICENSE file. -->
     <!--
       - JavaScript and HTML must be in separate files
      -->
-  </head>
+     <script type="module" src="popup.js"></script>
+  </head> 
   <body>
+    
       <img src='./assests/guitarguitarlogo.png' id='hydrateImage'>
       <!-- An Alarm delay of less than the minimum 1 minute will fire
-      in approximately 1 minute increments if released -->
-      <button id="sampleMinute" value="1">Sample minute</button>
-      <button id="min15" value="15">15 Minutes</button>
-      <button id="min30" value="30">30 Minutes</button>
-      <button id="cancelAlarm">Cancel Alarm</button>
-   <script src="popup.js"></script>
+      in approximately 1 minute increments if released
+        https://images.guitarguitar.co.uk/cdn/large/160/13122413501332f.jp
+    
+    -->
+
+      <div id="mainDiv" >
+        <h1 id="extensionName"></h1>
+        <a id="extensionImgLink"><img id="extensionImg" src="" width="122" height="330" alt="" ></a>
+        <p id="extensionPrice"></p>
+      </div>
+
   </body>
 </html>

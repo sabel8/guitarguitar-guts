@@ -1,10 +1,14 @@
+
+
 /* https://developer.spotify.com/web-api/authorization-guide/#client_credentials_flow */
  console.log("I ran")
-
 
 //  There is a problem with the CORS Access-Control-Allow-Origin - must be fixed with some header manipulation
 function httpGet(theUrl,token) {
     let xmlHttpReq = new XMLHttpRequest();
+    if (!theUrl){
+      theUrl = "http://localhost:3000/assets/guitars.json"
+    } 
     xmlHttpReq.open("GET", theUrl, false); 
     // xmlHttpReq.setRequestHeader("Accept", "application/json")
     // xmlHttpReq.setRequestHeader("Content-Type", "application/json")
@@ -12,17 +16,17 @@ function httpGet(theUrl,token) {
     if (token){
       xmlHttpReq.setRequestHeader("Authorization",token)
     }
-
     xmlHttpReq.send(null);
     return xmlHttpReq.responseText;
   }
 
 
-// console.log(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitarswithsongs',''));
+console.log(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitarswithsongs',''));
 
 //{"skU_ID":"", "youtubeUrl":"", "spotifyId":""}
 const specialGuitars = JSON.parse(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitarswithsongs',''));
-// console.log(specialGuitars);
+const guitars = JSON.parse(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitars',''));
+console.log(specialGuitars);
 
 const spotifyIds = [];
 for(let i = 0; i < specialGuitars.length; i++) {
@@ -39,22 +43,33 @@ for(let i = 0; i < spotifyIds.length; i++) {
 
 console.log(artistList);
 function getArtist(songId) {
-  const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer BQC30zPl-3aUh9S2NjUrVy2ncwtTJOjtZQAedpQwnZCZG6D3XqN6bNWwZ77V61y47HYB2ApXptPEHZtptcQXe1vdRatC3tq7a4YzcGGmkISkG8REgLtyOEM_5ZQqalwXdbFvKjVa7hZQCwTm_ZXCu5_OKECcgILgTobg-AR8kEQVzsbmEARwmU4-3FfD7Hk"));
+  const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer BQAl70hvrwVFu8atXudAWIzZ91OpBVz5EN_z_TQ8SX9_AK3eb_-TlYiOVpxgcJp7yBt3Sz3NVSVjxQuyh4biiy8XvqVjSlUkjADmldrgDLYjMaTMHPUeEpgNO1_x9qH1vztV3_R5LYQKZ5r9TzRLchNeqmY3114BEQacRyPvqt8w6xWuUA6KcNvrGD5ACko"));
   return song;
 }
 
 function checkArtist(){
+  let specialGuitar;
   for(let i = 0; i<artistList.length; i++){
     if (document.title.includes(artistList[i])){
       let obj = specialGuitars[i];
       console.log(obj.skU_ID);
+      specialGuitar = guitars.find(guitar => guitar.skU_ID === obj.skU_ID);
       //somehow filter
-      chrome.action.openPopup();
+      // chrome.action.openPopup();
+      console.log(specialGuitar)
+      console.log(specialGuitar.pictureMain)
     }
   }
+  if (!specialGuitar){
+    specialGuitar =""
+  } 
+  return specialGuitar;
 }
 
-checkArtist()
+
+  checkArtist()
+
+// export default{checkArtist} 
 
 /**
  * 

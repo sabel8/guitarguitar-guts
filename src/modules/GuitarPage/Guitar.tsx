@@ -1,4 +1,8 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -10,7 +14,7 @@ import { inject, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { GuitarPageStore } from "./GuitarPageStore";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, ExpandMore } from "@mui/icons-material";
 import YouTube from "react-youtube";
 
 interface IProps {
@@ -57,21 +61,62 @@ export class Guitar extends React.Component<IProps> {
               </Grid>
               <Grid item xs={8}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Typography variant="caption">
+                  <Typography variant="h6">
                     {this.store.guitar?.brandName}
                   </Typography>
                   <Typography variant="h4">
                     {this.store.guitar?.itemName}
                   </Typography>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: this.store.guitar?.productDetail!,
-                    }}
-                  />
+                  <Typography variant="h5">
+                    £{this.store.guitar?.salesPrice}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color={this.store.guitar?.qtyInStock! > 0 ? "green" : "red"}
+                  >
+                    {this.store.guitar?.qtyInStock! > 0
+                      ? "In stock"
+                      : "Out of stock"}
+                  </Typography>
+                  <div>
+                    <Accordion>
+                      <AccordionSummary expandIcon={<ExpandMore />}>
+                        <Typography>Product details</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails
+                        dangerouslySetInnerHTML={{
+                          __html: this.store.guitar?.productDetail ?? "",
+                        }}
+                      />
+                    </Accordion>
+                    <Accordion>
+                      <AccordionSummary expandIcon={<ExpandMore />}>
+                        <Typography>Description</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails
+                        dangerouslySetInnerHTML={{
+                          __html: this.store.guitar?.description ?? "",
+                        }}
+                      />
+                    </Accordion>
+                  </div>
+                  {this.store.spotifyData && <Alert variant="filled" color="info">
+                    This guitar is used by{" "}
+                    <strong>{this.store.spotifyData?.artists[0].name}</strong>
+                  </Alert>}
                 </Box>
               </Grid>
             </Grid>
-            <Box sx={{ display: "flex", justifyContent: "center", m: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                m: 4,
+                gap: 2,
+                flexDirection: "column",
+              }}
+            >
               {this.store.youtubeId && (
                 <YouTube videoId={this.store.youtubeId as string} />
               )}

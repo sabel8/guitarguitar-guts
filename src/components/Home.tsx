@@ -84,7 +84,7 @@ function ButtonBases(props: { GuitarListStore: GuitarListStore }) {
   const images = [
     { url: "/assets/acoustic.png", title: "acoustic", category: "GUAG" },
     { url: "/assets/electric.png", title: "electric", category: "GUEG" },
-    { url: "/assets/bass.png", title: "bass", category: "GUBG" },
+    { url: "/assets/bass.png", title: "bass", category: "GUBA" },
   ];
   return (
     <Box

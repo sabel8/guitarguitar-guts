@@ -212,6 +212,12 @@ class GuitarListItem extends React.Component<{
               <Typography variant="h5" color="text.secondary">
                 £{guitar.salesPrice}
               </Typography>
+              <Typography
+                variant="h6"
+                color={guitar.qtyInStock > 0 ? "green" : "red"}
+              >
+                {guitar.qtyInStock > 0 ? "In stock" : "Out of stock"}
+              </Typography>
             </CardContent>
           </Box>
         </Card>

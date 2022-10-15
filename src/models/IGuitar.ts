@@ -37,3 +37,22 @@ export enum Title {
   NextDayDeliveryAvailable = "Next Day Delivery Available",
   OfficialUKFenderDealer = "Official UK Fender Dealer",
 }
+
+export enum BodyShape {
+  SStyle = 1,
+  TStyle = 2,
+  DoubleCut = 3,
+  Offset = 4,
+  HollowBody = 5,
+  VStyle = 6,
+  SmallBody = 7,
+  Orchestral = 8,
+  GrandAuditorium = 9,
+  Dreadnought = 10,
+  Jumbo = 11,
+  Explorer = 12,
+  SingleCut = 13,
+  Combo = 14,
+  Head = 15,
+  Cabinet = 16,
+}

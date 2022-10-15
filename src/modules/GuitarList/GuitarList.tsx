@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
-import { IGuitar } from "../../models/IGuitar";
+import { BodyShape, IGuitar } from "../../models/IGuitar";
 import { GuitarListStore } from "./GuitarListStore";
 
 interface IProps {
@@ -65,6 +65,34 @@ export class GuitarList extends React.Component<IProps> {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Body shape</InputLabel>
+                <Select
+                  value={this.listStore.filters?.bodyShape ?? ""}
+                  label="Body shape"
+                  onChange={(e) =>
+                    this.listStore.setFilter(
+                      "bodyShape",
+                      +e.target.value
+                    )
+                  }
+                >
+                  {(Object.entries(BodyShape)).map(([key, value], i) => (
+                    <MenuItem value={key} key={i}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {Object.values(this.listStore.filters).filter((v) => !!v).length >
+                0 && (
+                <Typography>
+                  Applied filters:{" "}
+                  {Object.entries(this.listStore.filters)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(", ")}
+                </Typography>
+              )}
             </Box>
             {this.listStore.filteredGuitars?.length > 0 ? (
               <>

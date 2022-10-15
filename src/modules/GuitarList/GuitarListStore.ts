@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import { guitars } from "../../constants/apiResponse";
-import { IGuitar } from "../../models/IGuitar";
+import { BodyShape, IGuitar } from "../../models/IGuitar";
 
 const GUITAR_PER_PAGE = 9;
 
 interface IFilters {
   category: string;
+  bodyShape: number;
 }
 
 export class GuitarListStore {
@@ -37,9 +38,12 @@ export class GuitarListStore {
 
   get filteredGuitars(): IGuitar[] {
     return this.guitars.filter((g) => {
-      return this.filters.category
-        ? g.category.includes(this.filters.category)
-        : true;
+      return (
+        (this.filters.category
+          ? g.category.includes(this.filters.category)
+          : true) &&
+        (this.filters.bodyShape ? g.bodyShape === this.filters.bodyShape : true)
+      );
     });
   }
 
@@ -51,12 +55,12 @@ export class GuitarListStore {
     this.page = page;
   }
 
-  setFilter(key: keyof IFilters, value: string) {
+  setFilter(key: keyof IFilters, value: string | number) {
     console.log(
       "🚀 ~ file: GuitarListStore.ts ~ line 55 ~ GuitarListStore ~ setFilter ~ key",
       key
     );
-    this.filters[key] = value;
+    (this.filters[key] as any) = value;
     this.setPage(1);
   }
 }

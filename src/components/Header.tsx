@@ -8,10 +8,10 @@ interface IProps {}
 export class Header extends React.Component<IProps> {
   render() {
     return (
-      <AppBar position="static" sx={{ marginBottom: 2 }}>
+      <AppBar color="inherit" position="static" sx={{ marginBottom: 2, backgroundColor: "black" }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Guitar Guitar
+          <Typography variant="h4" component="div" sx={{ flexGrow: 1, color:"orangered", fontWeight: "bold" }}>
+            guitarguitar
           </Typography>
           <IconButton>{/* <SettingsIcon /> */}</IconButton>
         </Toolbar>

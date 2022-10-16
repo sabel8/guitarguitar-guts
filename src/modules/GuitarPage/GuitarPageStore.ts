@@ -16,21 +16,19 @@ export class GuitarPageStore {
 
   *loadGuitar(sku: string) {
     this.loading = true;
-    // this.guitar = ((yield axios.get(
-    //   "https://services.guitarguitar.co.uk/WebService/api/hackathon/guitars/" +
-    //     id
-    // )) as { data: IGuitar }).data;
-    let request = new XMLHttpRequest();
-    request.open("GET", "/assets/guitars.json", false);
-    request.send(null);
-    let guitars: IGuitar[] = JSON.parse(request.responseText);
-    this.guitar = yield guitars.find((g) => g.skU_ID === sku);
+    this.guitar =
+      (
+        (yield axios.get("http://localhost:105/listGuitars/")) as {
+          data: IGuitar[];
+        }
+      ).data.find((guitar) => guitar.skU_ID === sku) ?? null;
 
-    request = new XMLHttpRequest();
-    request.open("GET", "/assets/guitarswithsongs.json", false);
-    request.send(null);
-    let guitarsWithSongs: IGuitarWithSong[] = JSON.parse(request.responseText);
-    this.guitarWithSong = yield guitarsWithSongs.find((g) => g.skU_ID === sku);
+    this.guitarWithSong =
+      (
+        (yield axios.get("http://localhost:105/listCoolGuitars/")) as {
+          data: IGuitarWithSong[];
+        }
+      ).data.find((guitar) => guitar.skU_ID === sku) ?? null;
 
     yield this.getSpotifyData();
 
@@ -39,6 +37,11 @@ export class GuitarPageStore {
 
   async getSpotifyData(): Promise<any> {
     if (this.guitarWithSong != null) {
+      const spotifyCredentials: {
+        access_token: string;
+        expires_in: number;
+        token_type: string;
+      } = await (await fetch("http://localhost:105/spotify/")).json();
       this.spotifyData = await (
         await fetch(
           "https://api.spotify.com/v1/tracks/" +
@@ -46,8 +49,7 @@ export class GuitarPageStore {
           {
             method: "GET",
             headers: new Headers({
-              Authorization:
-                "Bearer BQAcjaV0T5IDC-VjJqp09eYBvKm-ZPVxfj546ocOEguTcgnMGlQ00z6uE8AWTXIZXPUfXR4z0QiVJMd6P6ZEW9PqfQFZzMERUmLxTLwQijQ75_x-eBSLNSpoq7Tb4Lr3f0n4ZRVbKN1iKbyJSU8c0UQ4pJ4-Fbqe_h1nojwB92RXrLOb",
+              Authorization: `${spotifyCredentials.token_type} ${spotifyCredentials.access_token}`,
             }),
           }
         )

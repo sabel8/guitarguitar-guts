@@ -16,7 +16,7 @@ import {
   Badge,
   Alert,
   Chip,
-  IconButton,
+  Button,
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
@@ -44,7 +44,21 @@ export class GuitarList extends React.Component<IProps> {
     return (
       <Container>
         {this.listStore.loading ? (
-          <CircularProgress />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 10,
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <CircularProgress />
+            <Typography color="primary" variant="h6">
+              Picking out best guitars...
+            </Typography>
+          </Box>
         ) : (
           <>
             <Box
@@ -53,9 +67,10 @@ export class GuitarList extends React.Component<IProps> {
                 justifyContent: "center",
                 padding: 3,
                 gap: 1,
+                flexWrap: "wrap",
               }}
             >
-              <FormControl sx={{ width: 150 }}>
+              <FormControl sx={{ minWidth: 150 }}>
                 <InputLabel>Category</InputLabel>
                 <Select
                   value={this.listStore.filters?.category ?? ""}
@@ -74,7 +89,7 @@ export class GuitarList extends React.Component<IProps> {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl sx={{ width: 150 }}>
+              <FormControl sx={{ minWidth: 150 }}>
                 <InputLabel>Body shape</InputLabel>
                 <Select
                   value={this.listStore.filters?.bodyShape ?? ""}
@@ -92,7 +107,7 @@ export class GuitarList extends React.Component<IProps> {
                     ))}
                 </Select>
               </FormControl>
-              <FormControl sx={{ width: 150 }}>
+              <FormControl sx={{ minWidth: 150 }}>
                 <InputLabel>Pickup</InputLabel>
                 <Select
                   value={this.listStore.filters?.pickup ?? ""}
@@ -110,7 +125,7 @@ export class GuitarList extends React.Component<IProps> {
                     ))}
                 </Select>
               </FormControl>
-              <FormControl sx={{ width: 150 }}>
+              <FormControl sx={{ minWidth: 150 }}>
                 <InputLabel>Colour</InputLabel>
                 <Select
                   value={this.listStore.filters?.colour ?? ""}
@@ -133,7 +148,14 @@ export class GuitarList extends React.Component<IProps> {
                     ))}
                 </Select>
               </FormControl>
-              <IconButton
+              <Button
+                startIcon={
+                  this.listStore.filters.onlyStarred ? (
+                    <Star />
+                  ) : (
+                    <StarOutline />
+                  )
+                }
                 onClick={() =>
                   this.listStore.setFilter(
                     "onlyStarred",
@@ -141,12 +163,8 @@ export class GuitarList extends React.Component<IProps> {
                   )
                 }
               >
-                {this.listStore.filters.onlyStarred ? (
-                  <Star />
-                ) : (
-                  <StarOutline />
-                )}
-              </IconButton>
+                <Typography>Only famous guitars</Typography>
+              </Button>
             </Box>
             <Box sx={{ mb: 2 }}>
               {Object.values(this.listStore.filters).filter((v) => !!v).length >
@@ -172,7 +190,7 @@ export class GuitarList extends React.Component<IProps> {
               <>
                 <Grid container spacing={2}>
                   {this.listStore.pageOfGuitarsFiltered.map((guitar, i) => (
-                    <Grid item xs={4} key={i}>
+                    <Grid item md={4} xs={12} key={i}>
                       <GuitarListItem
                         guitar={guitar}
                         needsBadge={guitar.isStarred}
@@ -213,7 +231,11 @@ class GuitarListItem extends React.Component<{
           <CardMedia
             component="img"
             height={200}
-            image={guitar.pictureMain}
+            image={
+              guitar.pictureMain.length > 45
+                ? guitar.pictureMain
+                : "/assets/placeholder-guitar.png"
+            }
             alt={guitar.itemName}
             sx={{ height: 200, width: 100, objectFit: "contain" }}
             style={{ padding: 10 }}

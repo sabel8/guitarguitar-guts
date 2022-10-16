@@ -34,7 +34,21 @@ export class Guitar extends React.Component<IProps> {
     return (
       <Container sx={{ mt: 2 }}>
         {this.store.loading ? (
-          <CircularProgress />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 10,
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <CircularProgress />
+            <Typography color="primary" variant="h6">
+              Tuning strings...
+            </Typography>
+          </Box>
         ) : (
           <>
             <Box sx={{ mb: 4 }}>
@@ -50,7 +64,11 @@ export class Guitar extends React.Component<IProps> {
             <Grid container spacing={2}>
               <Grid item xs={4}>
                 <img
-                  src={this.store.guitar?.pictureMain}
+                  src={
+                    this.store.guitar!.pictureMain!.length > 45
+                      ? this.store.guitar?.pictureMain
+                      : "/assets/placeholder-guitar.png"
+                  }
                   alt={this.store.guitar?.productDetail}
                   style={{
                     width: "100%",
@@ -65,6 +83,7 @@ export class Guitar extends React.Component<IProps> {
                     {this.store.guitar?.brandName}
                   </Typography>
                   <Typography variant="h4">
+                    {this.store.guitarWithSong && "⭐ "}
                     {this.store.guitar?.itemName}
                   </Typography>
                   <Typography variant="h5">
@@ -79,31 +98,39 @@ export class Guitar extends React.Component<IProps> {
                       : "Out of stock"}
                   </Typography>
                   <div>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>Product details</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails
-                        dangerouslySetInnerHTML={{
-                          __html: this.store.guitar?.productDetail ?? "",
-                        }}
-                      />
-                    </Accordion>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>Description</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails
-                        dangerouslySetInnerHTML={{
-                          __html: this.store.guitar?.description ?? "",
-                        }}
-                      />
-                    </Accordion>
+                    {this.store.guitar?.productDetail !== "" && (
+                      <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography>Product details</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails
+                          dangerouslySetInnerHTML={{
+                            __html: this.store.guitar?.productDetail ?? "",
+                          }}
+                        />
+                      </Accordion>
+                    )}
+                    {this.store.guitar?.description !== "" && (
+                      <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography>Description</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails
+                          dangerouslySetInnerHTML={{
+                            __html: this.store.guitar?.description ?? "",
+                          }}
+                        />
+                      </Accordion>
+                    )}
                   </div>
-                  {this.store.spotifyData?.artists && <Alert variant="filled" color="info">
-                    This guitar is used by{" "}
-                    <strong>{this.store.spotifyData?.artists[0].name}</strong>
-                  </Alert>}
+                  {this.store.spotifyData?.artists && (
+                    <Alert variant="filled" color="info">
+                      This guitar is used by{" "}
+                      <strong>{this.store.spotifyData?.artists[0].name}</strong>{" "}
+                      in the song{" "}
+                      <strong>{this.store.spotifyData?.name}</strong>.
+                    </Alert>
+                  )}
                 </Box>
               </Grid>
             </Grid>

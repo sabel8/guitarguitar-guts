@@ -1,3 +1,4 @@
+import axios from "axios";
 import { makeAutoObservable } from "mobx";
 import { categories } from "../../constants/categories";
 import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
@@ -26,18 +27,17 @@ export class GuitarListStore {
 
   *loadGuitars() {
     this.loading = true;
-    // this.guitars = ((yield axios.get(
-    //   "https://services.guitarguitar.co.uk/WebService/api/hackathon/guitars"
-    // )) as { data: IGuitar[] }).data;
-    var request = new XMLHttpRequest();
-    request.open("GET", "/assets/guitars.json", false);
-    request.send(null);
-    let guitars: IGuitar[] = JSON.parse(request.responseText);
+    let guitars = (
+      (yield axios.get("http://localhost:105/listGuitars")) as {
+        data: IGuitar[];
+      }
+    ).data;
 
-    request = new XMLHttpRequest();
-    request.open("GET", "/assets/guitarswithsongs.json", false);
-    request.send(null);
-    this.guitarsWithSongs = JSON.parse(request.responseText);
+    this.guitarsWithSongs = (
+      (yield axios.get("http://localhost:105/listCoolGuitars/")) as {
+        data: IGuitarWithSong[];
+      }
+    ).data;
 
     this.guitars = yield guitars.map((g) => ({
       ...g,
@@ -116,7 +116,7 @@ export class GuitarListStore {
       {
         key: "onlyStarred",
         title: "",
-        value: this.filters.onlyStarred ? "Only starred" : "",
+        value: this.filters.onlyStarred ? "Only famous" : "",
       },
     ].filter((f) => f.value !== "");
   }

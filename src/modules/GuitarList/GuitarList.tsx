@@ -16,6 +16,7 @@ import {
   Badge,
   Alert,
   Chip,
+  IconButton,
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
@@ -23,6 +24,7 @@ import { Link } from "react-router-dom";
 import { categories } from "../../constants/categories";
 import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
 import { GuitarListStore } from "./GuitarListStore";
+import { StarOutline, Star } from "@mui/icons-material";
 
 interface IProps {
   GuitarListStore?: GuitarListStore;
@@ -131,6 +133,20 @@ export class GuitarList extends React.Component<IProps> {
                     ))}
                 </Select>
               </FormControl>
+              <IconButton
+                onClick={() =>
+                  this.listStore.setFilter(
+                    "onlyStarred",
+                    !this.listStore.filters.onlyStarred
+                  )
+                }
+              >
+                {this.listStore.filters.onlyStarred ? (
+                  <Star />
+                ) : (
+                  <StarOutline />
+                )}
+              </IconButton>
             </Box>
             <Box sx={{ mb: 2 }}>
               {Object.values(this.listStore.filters).filter((v) => !!v).length >
@@ -141,7 +157,7 @@ export class GuitarList extends React.Component<IProps> {
                     ({ key, title, value }, i) => (
                       <Chip
                         key={i}
-                        label={`${title}: ${value}`}
+                        label={title !== "" ? `${title}: ${value}` : value}
                         variant="outlined"
                         onDelete={() =>
                           this.listStore.setFilter(key as any, null)
@@ -159,11 +175,7 @@ export class GuitarList extends React.Component<IProps> {
                     <Grid item xs={4} key={i}>
                       <GuitarListItem
                         guitar={guitar}
-                        needsBadge={
-                          !!this.listStore.guitarsWithSongs.find(
-                            (gws) => gws.skU_ID === guitar.skU_ID
-                          )
-                        }
+                        needsBadge={guitar.isStarred}
                       />
                     </Grid>
                   ))}
@@ -226,9 +238,10 @@ class GuitarListItem extends React.Component<{
 
     return (
       <Badge
-        color="error"
-        badgeContent={needsBadge ? "YT" : null}
-        sx={{ width: "100%" }}
+        color="default"
+        badgeContent={needsBadge ? "⭐" : null}
+        sx={{ width: "100%", fontSize: 40 }}
+        componentsProps={{ badge: { style: { fontSize: 36 } } }}
       >
         {card}
       </Badge>

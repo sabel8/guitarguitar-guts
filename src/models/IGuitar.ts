@@ -17,6 +17,7 @@ export interface IGuitar {
   bodyShape: number;
   createdOn: string;
   imageUrls: null;
+  isStarred: boolean;
 }
 
 export enum Title {

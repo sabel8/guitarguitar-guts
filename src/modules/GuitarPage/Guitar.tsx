@@ -100,7 +100,7 @@ export class Guitar extends React.Component<IProps> {
                       />
                     </Accordion>
                   </div>
-                  {this.store.spotifyData && <Alert variant="filled" color="info">
+                  {this.store.spotifyData?.artists && <Alert variant="filled" color="info">
                     This guitar is used by{" "}
                     <strong>{this.store.spotifyData?.artists[0].name}</strong>
                   </Alert>}

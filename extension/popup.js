@@ -19,11 +19,6 @@ window.onload = async () =>{
         document.getElementById("extensionImg").src="https://www.mccrystalopticians.com/wp-content/uploads/2020/03/8-82835_sad-face-emoji-png-sad-face-emoji-transparent.png";
     }
         
-
-    console.log('fuck this');
-    console.log(getActiveTabURL().then((result)=> {return result}));
-    console.log(getActiveTabURL());
-    console.log('fuck this');
     /* https://developer.spotify.com/web-api/authorization-guide/#client_credentials_flow */
     console.log("I ran");
 
@@ -46,67 +41,105 @@ window.onload = async () =>{
  
  
  function checkArtist(titler){
-   let specialGuitar;
-   console.log(titler)
+    let specialGuitar;
+    console.log(titler)
+      
+  
+    console.log(httpGet('http://localhost:3000/assets/guitarswithsongs.json',''));
     
- 
- console.log(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitarswithsongs',''));
- 
- //{"skU_ID":"", "youtubeUrl":"", "spotifyId":""}
- const specialGuitars = JSON.parse(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitarswithsongs',''));
- const guitars = JSON.parse(httpGet('https://services.guitarguitar.co.uk/WebService/api/hackathon/guitars',''));
- console.log(specialGuitars);
- 
- const spotifyIds = [];
- for(let i = 0; i < specialGuitars.length; i++) {
-     let obj = specialGuitars[i];
-     spotifyIds.push(obj.spotifyId.slice(0,22))
- }
- // console.log(spotifyIds);
- 
- const artistList= [];
- for(let i = 0; i < spotifyIds.length; i++) {
-     let obj = getArtist(spotifyIds[i]);
-     artistList.push(obj.album.artists[0].name);
- }
- 
- console.log(artistList);
- function getArtist(songId) {
-   const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer BQAl70hvrwVFu8atXudAWIzZ91OpBVz5EN_z_TQ8SX9_AK3eb_-TlYiOVpxgcJp7yBt3Sz3NVSVjxQuyh4biiy8XvqVjSlUkjADmldrgDLYjMaTMHPUeEpgNO1_x9qH1vztV3_R5LYQKZ5r9TzRLchNeqmY3114BEQacRyPvqt8w6xWuUA6KcNvrGD5ACko"));
-   return song;
- }
-
-   for(let i = 0; i<artistList.length; i++){
-     if (titler.includes(artistList[i])){
-       let obj = specialGuitars[i];
-       console.log(obj.skU_ID);
-       specialGuitar = guitars.find(guitar => guitar.skU_ID === obj.skU_ID);
-       //somehow filter
-       // chrome.action.openPopup();
-       console.log(specialGuitar)
-       console.log(specialGuitar.pictureMain)
-     }
-   }
-   if (!specialGuitar){
-     specialGuitar =""
-   } 
-   return specialGuitar;
- }
- 
- 
- 
- // export default{checkArtist} 
- 
- /**
-  * 
-  * const client_id = '59bba2356596401cbd8bf46071610dc7'; // Our client id
- const client_secret = 'a556972fe6454b999a51a9b198828d93'; // Our secret
- 
- 
-   */
-
+    //{"skU_ID":"", "youtubeUrl":"", "spotifyId":""}
+    const specialGuitars = JSON.parse(httpGet('http://localhost:3000/assets/guitarswithsongs.json',''));
+    const guitars = JSON.parse(httpGet('http://localhost:3000/assets/guitars.json',''));
+    console.log(specialGuitars);
     
+    const spotifyIds = [];
+    for(let i = 0; i < specialGuitars.length; i++) {
+        let obj = specialGuitars[i];
+        spotifyIds.push(obj.spotifyId.slice(0,22))
     }
+    // console.log(spotifyIds);
+    
+    const artistList= [];
+    for(let i = 0; i < spotifyIds.length; i++) {
+        let obj = getArtist(spotifyIds[i]);
+        artistList.push(obj.album.artists[0].name);
+    }
+
+    function gettoken(){
+      var client_id = '59bba2356596401cbd8bf46071610dc7';
+      var client_secret = 'a556972fe6454b999a51a9b198828d93';
+
+      let utf8Encode = new TextEncoder();
+      utf8Encode.encode(client_id+':'+client_secret);
+
+
+
+      let b = utf8Encode.toString('base64')
+    
+
+
+
+
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + b
+      },
+      form: {
+        grant_type: 'client_credentials'
+      },
+      json: true
+    };
+    
+
+    const data = new URLSearchParams();
+    
+        data.append('grant_type', 'client_credentials');
+    
+
+    fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {'Authorization': 'Basic ' + b}, 
+      body: data
+    }).then(res => {
+      console.log("Request complete! response:", res.body);
+    });
+
+
+    // request.post(authOptions, function(error, response, body) {
+    //   if (!error && response.statusCode === 200) {
+    //     var token = body.access_token;
+    //     return token;
+    //   }
+    // });
+      } 
+
+    console.log(artistList);
+    function getArtist(songId) {
+      const token = gettoken();
+      const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer "+token));
+      return song;
+    }
+
+      for(let i = 0; i<artistList.length; i++){
+        if (titler.toLowerCase().includes(artistList[i]).toLowerCase()){
+          let obj = specialGuitars[i];
+          console.log(obj.skU_ID);
+          specialGuitar = guitars.find(guitar => guitar.skU_ID === obj.skU_ID);
+          //somehow filter
+          // chrome.action.openPopup();
+          console.log(specialGuitar)
+          console.log(specialGuitar.pictureMain)
+        }
+      }
+      if (!specialGuitar){
+        specialGuitar =""
+      } 
+      return specialGuitar;
+ }
+ 
+}
 
     
     /**

@@ -43,7 +43,7 @@ for(let i = 0; i < spotifyIds.length; i++) {
 
 console.log(artistList);
 function getArtist(songId) {
-  const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer BQAl70hvrwVFu8atXudAWIzZ91OpBVz5EN_z_TQ8SX9_AK3eb_-TlYiOVpxgcJp7yBt3Sz3NVSVjxQuyh4biiy8XvqVjSlUkjADmldrgDLYjMaTMHPUeEpgNO1_x9qH1vztV3_R5LYQKZ5r9TzRLchNeqmY3114BEQacRyPvqt8w6xWuUA6KcNvrGD5ACko"));
+  const song = JSON.parse(httpGet('https://api.spotify.com/v1/tracks/'+songId,"Bearer "));
   return song;
 }
 

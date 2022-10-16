@@ -27,7 +27,10 @@
     "react-youtube": "^10.0.0",
     "sort-by": "^1.2.0",
     "typescript": "^4.8.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^1.0.5",
+    "morgan": "^1.10.0"
   },
   "scripts": {
     "start": "react-scripts start",

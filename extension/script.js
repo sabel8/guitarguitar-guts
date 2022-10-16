@@ -95,7 +95,7 @@ console.log(guitar);
 
 if (guitar){
   window.alert('Hey! We have found a guitar that might interest you, click on the extension to view it.')
-  chrome.action.setIcon({ path: "assets/pick_tilt.png" });
+  // chrome.action.setIcon({ path: "assets/pick_tilt.png" });
 }
       
 

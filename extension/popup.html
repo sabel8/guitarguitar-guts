@@ -3,48 +3,51 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file. -->
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
 
     <title>We have found a guiter played by X for you</title>
- 
+
     <style>
-      body {
-        text-align: center;
-      }
-
-      #hydrateImage {
-        width: 100px;
-        margin: 5px;
-      }
-
-      button {
-        margin: 5px;
-        outline: none;
-      }
-
-      button:hover {
-        outline: #80DEEA dotted thick;
-      }
+        body {
+            text-align: center;
+        }
+        
+        #hydrateImage {
+            width: 100px;
+            margin: 5px;
+        }
+        
+        button {
+            margin: 5px;
+            outline: none;
+        }
+        
+        button:hover {
+            outline: #80DEEA dotted thick;
+        }
     </style>
     <!--
       - JavaScript and HTML must be in separate files
      -->
-     <script type="module" src="popup.js"></script>
-  </head> 
-  <body>
-    
-      <img src='./assests/guitarguitarlogo.png' id='hydrateImage'>
-      <!-- An Alarm delay of less than the minimum 1 minute will fire
+    <script type="module" src="popup.js"></script>
+</head>
+
+<body>
+
+    <img src='./assests/guitarguitarlogo.png' id='hydrateImage'>
+    <!-- An Alarm delay of less than the minimum 1 minute will fire
       in approximately 1 minute increments if released
         https://images.guitarguitar.co.uk/cdn/large/160/13122413501332f.jp
     
     -->
 
-      <div id="mainDiv" >
+    <div id="mainDiv">
         <h1 id="extensionName"></h1>
-        <a id="extensionImgLink" href=""><img id="extensionImg" src="" width="122" height="330" alt="" ></a>
+        <a id="extensionImgLink" href=""><img id="extensionImg" src="./assests/placeholder-guitar.png" width="122" height="330" alt=""></a>
         <p id="extensionPrice"></p>
-      </div>
+    </div>
 
-  </body>
+</body>
+
 </html>

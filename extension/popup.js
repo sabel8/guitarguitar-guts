@@ -16,7 +16,7 @@ window.onload = async () =>{
     }
     else{
         document.getElementById("extensionName").innerHTML="No guitars to show!";
-        document.getElementById("extensionImg").src="https://www.mccrystalopticians.com/wp-content/uploads/2020/03/8-82835_sad-face-emoji-png-sad-face-emoji-transparent.png";
+        document.getElementById("extensionImg").src="https://media.tenor.com/O5sbAjo0-nYAAAAM/hellinheavns-capybara.gif";
     }
         
     /* https://developer.spotify.com/web-api/authorization-guide/#client_credentials_flow */
@@ -26,7 +26,7 @@ window.onload = async () =>{
  function httpGet(theUrl,token) {
      let xmlHttpReq = new XMLHttpRequest();
      if (!theUrl){
-       theUrl = "http://localhost:3000/assets/guitars.json"
+       theUrl = "http://localhost:105/listGuitars/"
      } 
      xmlHttpReq.open("GET", theUrl, false); 
      // xmlHttpReq.setRequestHeader("Accept", "application/json")
@@ -42,14 +42,15 @@ window.onload = async () =>{
  
  function checkArtist(titler){
     let specialGuitar;
+    titler.toLowerCase()
     console.log(titler)
       
   
-    console.log(httpGet('http://localhost:3000/assets/guitarswithsongs.json',''));
+    console.log(httpGet('http://localhost:105/listCoolGuitars/',''));
     
     //{"skU_ID":"", "youtubeUrl":"", "spotifyId":""}
-    const specialGuitars = JSON.parse(httpGet('http://localhost:3000/assets/guitarswithsongs.json',''));
-    const guitars = JSON.parse(httpGet('http://localhost:3000/assets/guitars.json',''));
+    const specialGuitars = JSON.parse(httpGet('http://localhost:105/listCoolGuitars/',''));
+    const guitars = JSON.parse(httpGet('http://localhost:105/listGuitars/',''));
     console.log(specialGuitars);
     
     const spotifyIds = [];
@@ -57,62 +58,17 @@ window.onload = async () =>{
         let obj = specialGuitars[i];
         spotifyIds.push(obj.spotifyId.slice(0,22))
     }
-    // console.log(spotifyIds);
+    console.log(spotifyIds);
     
     const artistList= [];
     for(let i = 0; i < spotifyIds.length; i++) {
         let obj = getArtist(spotifyIds[i]);
-        artistList.push(obj.album.artists[0].name);
+        artistList.push(obj.album.artists[0].name.toLowerCase());
     }
 
     function gettoken(){
-      var client_id = '59bba2356596401cbd8bf46071610dc7';
-      var client_secret = 'a556972fe6454b999a51a9b198828d93';
-
-      let utf8Encode = new TextEncoder();
-      utf8Encode.encode(client_id+':'+client_secret);
-
-
-
-      let b = utf8Encode.toString('base64')
-    
-
-
-
-
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Basic ' + b
-      },
-      form: {
-        grant_type: 'client_credentials'
-      },
-      json: true
-    };
-    
-
-    const data = new URLSearchParams();
-    
-        data.append('grant_type', 'client_credentials');
-    
-
-    fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {'Authorization': 'Basic ' + b}, 
-      body: data
-    }).then(res => {
-      console.log("Request complete! response:", res.body);
-    });
-
-
-    // request.post(authOptions, function(error, response, body) {
-    //   if (!error && response.statusCode === 200) {
-    //     var token = body.access_token;
-    //     return token;
-    //   }
-    // });
+      let obj = JSON.parse(httpGet('http://localhost:105/spotify/',''))
+      return obj.access_token
       } 
 
     console.log(artistList);
@@ -123,7 +79,7 @@ window.onload = async () =>{
     }
 
       for(let i = 0; i<artistList.length; i++){
-        if (titler.toLowerCase().includes(artistList[i]).toLowerCase()){
+        if (titler.toLowerCase().includes(artistList[i])){
           let obj = specialGuitars[i];
           console.log(obj.skU_ID);
           specialGuitar = guitars.find(guitar => guitar.skU_ID === obj.skU_ID);
@@ -140,12 +96,3 @@ window.onload = async () =>{
  }
  
 }
-
-    
-    /**
-     * 
-     * const client_id = '59bba2356596401cbd8bf46071610dc7'; // Our client id
-    const client_secret = 'a556972fe6454b999a51a9b198828d93'; // Our secret
-    
-    
-      */

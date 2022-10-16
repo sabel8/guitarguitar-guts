@@ -1,6 +1,8 @@
+import { Alert } from "@mui/material";
 import { RouteObject } from "react-router-dom";
 import { Home } from "../components/Home";
 import { GuitarList } from "../modules/GuitarList/GuitarList";
+import { GuitarPage } from "../modules/GuitarPage/GuitarPage";
 
 export const ROUTES: RouteObject[] = [
   {
@@ -9,10 +11,14 @@ export const ROUTES: RouteObject[] = [
   },
   {
     path: "/guitars",
-    element: <GuitarList />
+    element: <GuitarList />,
+  },
+  {
+    path: "/guitars/:sku",
+    element: <GuitarPage />,
   },
   {
     path: "*",
-    element: <div>404</div>,
+    element: <Alert severity="error">404</Alert>,
   },
 ];

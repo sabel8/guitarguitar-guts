@@ -1,7 +1,7 @@
 export interface IGuitar {
   skU_ID: string;
   asn: string;
-  category: Category;
+  category: string;
   online: boolean;
   itemName: string;
   title: string;
@@ -17,19 +17,7 @@ export interface IGuitar {
   bodyShape: number;
   createdOn: string;
   imageUrls: null;
-}
-
-export enum Category {
-  GUAGCCLh = "GUAGCC_lh",
-  GUAGLh = "GUAG_lh",
-  GUEGLh = "GUEG_lh",
-  Guag1 = "GUAG_1",
-  Guag2 = "GUAG_2",
-  Guagcc1 = "GUAGCC_1",
-  Guba14 = "GUBA_14",
-  Gueg1 = "GUEG_1",
-  Gueg2 = "GUEG_2",
-  Gueg7 = "GUEG_7",
+  isStarred: boolean;
 }
 
 export enum Title {
@@ -55,4 +43,36 @@ export enum BodyShape {
   Combo = 14,
   Head = 15,
   Cabinet = 16,
+}
+
+export enum Pickup {
+  ElectroAcoustic = 1,
+  SS = 2,
+  SSS = 3,
+  HH = 4,
+  HHH = 5,
+  HS = 6,
+  HSS = 7,
+  HSH = 8,
+  P90 = 9,
+  S = 10,
+  H = 11,
+}
+
+export enum Colour {
+  Red = 3,
+  Orange = 12,
+  Yellow = 4,
+  Green = 6,
+  Blue = 5,
+  Purple = 13,
+  Pink = 8,
+  Brown = 7,
+  Gold = 9,
+  Silver = 10,
+  Grey = 11,
+  Black = 1,
+  White = 2,
+  Natural = 14,
+  Multicolour = 15,
 }

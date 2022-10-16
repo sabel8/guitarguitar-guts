@@ -1,3 +1,4 @@
+import { Circle } from "@mui/icons-material";
 import {
   CircularProgress,
   Container,
@@ -14,11 +15,16 @@ import {
   InputLabel,
   Badge,
   Alert,
+  Chip,
+  IconButton,
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import React from "react";
-import { BodyShape, IGuitar } from "../../models/IGuitar";
+import { Link } from "react-router-dom";
+import { categories } from "../../constants/categories";
+import { BodyShape, Colour, IGuitar, Pickup } from "../../models/IGuitar";
 import { GuitarListStore } from "./GuitarListStore";
+import { StarOutline, Star } from "@mui/icons-material";
 
 interface IProps {
   GuitarListStore?: GuitarListStore;
@@ -61,13 +67,9 @@ export class GuitarList extends React.Component<IProps> {
                     )
                   }
                 >
-                  {[
-                    { text: "Acoustic", value: "GUAG" },
-                    { text: "Electric", value: "GUEG" },
-                    { text: "Bass", value: "GUBG" },
-                  ].map((item, i) => (
-                    <MenuItem value={item.value} key={i}>
-                      {item.text}
+                  {Object.entries(categories).map(([key, value], i) => (
+                    <MenuItem value={key} key={i}>
+                      {value.Category}
                     </MenuItem>
                   ))}
                 </Select>
@@ -81,29 +83,100 @@ export class GuitarList extends React.Component<IProps> {
                     this.listStore.setFilter("bodyShape", +e.target.value)
                   }
                 >
-                  {Object.entries(BodyShape).map(([key, value], i) => (
-                    <MenuItem value={key} key={i}>
-                      {value}
-                    </MenuItem>
-                  ))}
+                  {Object.entries(BodyShape)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        {value}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Pickup</InputLabel>
+                <Select
+                  value={this.listStore.filters?.pickup ?? ""}
+                  label="Pickup"
+                  onChange={(e) =>
+                    this.listStore.setFilter("pickup", +e.target.value)
+                  }
+                >
+                  {Object.entries(Pickup)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: 150 }}>
+                <InputLabel>Colour</InputLabel>
+                <Select
+                  value={this.listStore.filters?.colour ?? ""}
+                  label="Colour"
+                  onChange={(e) =>
+                    this.listStore.setFilter("colour", +e.target.value)
+                  }
+                >
+                  {Object.entries(Colour)
+                    .filter(([k, v]) => !isNaN(k as any))
+                    .map(([key, value], i) => (
+                      <MenuItem value={key} key={i}>
+                        <Box
+                          sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                        >
+                          <Circle htmlColor={value.toString().toLowerCase()} />{" "}
+                          {value}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                onClick={() =>
+                  this.listStore.setFilter(
+                    "onlyStarred",
+                    !this.listStore.filters.onlyStarred
+                  )
+                }
+              >
+                {this.listStore.filters.onlyStarred ? (
+                  <Star />
+                ) : (
+                  <StarOutline />
+                )}
+              </IconButton>
             </Box>
-            {Object.values(this.listStore.filters).filter((v) => !!v).length >
-              0 && (
-              <Typography>
-                Applied filters:{" "}
-                {Object.entries(this.listStore.filters)
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(", ")}
-              </Typography>
-            )}
+            <Box sx={{ mb: 2 }}>
+              {Object.values(this.listStore.filters).filter((v) => !!v).length >
+                0 && (
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                  <Typography>Applied filters</Typography>
+                  {this.listStore.filtersApplied.map(
+                    ({ key, title, value }, i) => (
+                      <Chip
+                        key={i}
+                        label={title !== "" ? `${title}: ${value}` : value}
+                        variant="outlined"
+                        onDelete={() =>
+                          this.listStore.setFilter(key as any, null)
+                        }
+                      />
+                    )
+                  )}
+                </Box>
+              )}
+            </Box>
             {this.listStore.filteredGuitars?.length > 0 ? (
               <>
                 <Grid container spacing={2}>
                   {this.listStore.pageOfGuitarsFiltered.map((guitar, i) => (
                     <Grid item xs={4} key={i}>
-                      <GuitarListItem guitar={guitar} />
+                      <GuitarListItem
+                        guitar={guitar}
+                        needsBadge={guitar.isStarred}
+                      />
                     </Grid>
                   ))}
                 </Grid>
@@ -128,38 +201,50 @@ export class GuitarList extends React.Component<IProps> {
   }
 }
 
-class GuitarListItem extends React.Component<{ guitar: IGuitar }> {
+class GuitarListItem extends React.Component<{
+  guitar: IGuitar;
+  needsBadge: boolean;
+}> {
   render() {
-    const { guitar } = this.props;
+    const { guitar, needsBadge } = this.props;
     const card = (
-      <Card sx={{ display: "flex", height: 200, width: "100%" }}>
-        <CardMedia
-          component="img"
-          height={200}
-          image={guitar.pictureMain}
-          alt={guitar.itemName}
-          sx={{ height: 200, width: 100, objectFit: "contain" }}
-          style={{ padding: 10 }}
-        />
-        <Box>
-          <CardContent>
-            <Typography variant="h6">{guitar.itemName}</Typography>
-            <Typography variant="h5" color="text.secondary">
-              £{guitar.salesPrice}
-            </Typography>
-          </CardContent>
-        </Box>
-      </Card>
+      <Link to={`/guitars/${guitar.skU_ID}`} style={{ width: "100%" }}>
+        <Card sx={{ display: "flex", height: 200, width: "100%" }}>
+          <CardMedia
+            component="img"
+            height={200}
+            image={guitar.pictureMain}
+            alt={guitar.itemName}
+            sx={{ height: 200, width: 100, objectFit: "contain" }}
+            style={{ padding: 10 }}
+          />
+          <Box>
+            <CardContent>
+              <Typography variant="h6">{guitar.itemName}</Typography>
+              <Typography variant="h5" color="text.secondary">
+                £{guitar.salesPrice}
+              </Typography>
+              <Typography
+                variant="h6"
+                color={guitar.qtyInStock > 0 ? "green" : "red"}
+              >
+                {guitar.qtyInStock > 0 ? "In stock" : "Out of stock"}
+              </Typography>
+            </CardContent>
+          </Box>
+        </Card>
+      </Link>
     );
 
-    const needsBadge: boolean = guitar.salesPrice < 500;
-
-    return needsBadge ? (
-      <Badge color="primary" badgeContent="Cheap!" sx={{ display: "flex" }}>
+    return (
+      <Badge
+        color="default"
+        badgeContent={needsBadge ? "⭐" : null}
+        sx={{ width: "100%", fontSize: 40 }}
+        componentsProps={{ badge: { style: { fontSize: 36 } } }}
+      >
         {card}
       </Badge>
-    ) : (
-      card
     );
   }
 }

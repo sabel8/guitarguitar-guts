@@ -13,6 +13,7 @@ window.onload = async () =>{
         document.getElementById("extensionImg").src=guitar.pictureMain;
         document.getElementById("extensionImgLink").href=guitar.pictureMain;
         document.getElementById("extensionPrice").innerHTML=guitar.salesPrice;
+        document.getElementById("mainDiv").onclick = () => chrome.tabs.create({url: "http://localhost:3000/guitars/" + guitar.skU_ID });
     }
     else{
         document.getElementById("extensionName").innerHTML="No guitars to show!";
@@ -85,6 +86,8 @@ window.onload = async () =>{
           specialGuitar = guitars.find(guitar => guitar.skU_ID === obj.skU_ID);
           //somehow filter
           // chrome.action.openPopup();
+          
+          //chrome.tabs.create({url: "http://localhost:3000/guitars/" + obj.skU_ID })
           console.log(specialGuitar)
           console.log(specialGuitar.pictureMain)
         }
